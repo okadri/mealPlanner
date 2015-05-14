@@ -21,7 +21,7 @@ angular.module('dinnerPlannerApp')
   	};
   	return Plan;
   })
-  .factory('planService', function () {
+  .factory('planService', function ($q) {
     return {
       _pool: null,
       _findById: function(arr, id) {

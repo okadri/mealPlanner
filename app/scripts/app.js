@@ -14,13 +14,17 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'ui.calendar'
   ])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        controller: 'MainCtrl',
+    		resolve: {
+    			allPlans: MainCtrl.getAllPlans
+    		}
       })
       .when('/about', {
         templateUrl: 'views/about.html',
