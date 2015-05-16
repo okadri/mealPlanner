@@ -21,7 +21,7 @@ angular.module('dinnerPlannerApp')
   	};
   	return Plan;
   })
-  .factory('planService', function ($q) {
+  .factory('planService', function ($q, Plan) {
     return {
       _pool: null,
       _findById: function(arr, id) {
@@ -53,6 +53,22 @@ angular.module('dinnerPlannerApp')
       getAll: function () {
         var deferred = $q.defer();
 
+        this._pool = [
+            {
+                title  : 'event1',
+                start  : '2015-05-01'
+            },
+            {
+                title  : 'event2',
+                start  : '2015-05-05',
+                end    : '2015-05-07'
+            },
+            {
+                title  : 'event3',
+                start  : '2015-05-09T12:30:00',
+                allDay : false // will make the time show
+            }
+        ];
 
         deferred.resolve(this._pool);
         return deferred.promise;

@@ -12,22 +12,18 @@ var MainCtrl = angular.module('dinnerPlannerApp')
     $scope.plans = allPlans;
 
     $scope.uiConfig = {
-      calendar: {
-        theme: true,
-        contentHeight: 450,
-        defaultView: 'month',
-        selectable: true,
-        allDayDefault: false,
-        allDaySlot: false,
-        slotEventOverlap: false,
-        minTime: 7,
-        maxTime: 18,
-        header: {
-          left: 'prev,next',
+      calendar:{
+        height: 450,
+        editable: true,
+        header:{
+          left: 'month agendaWeek',
           center: 'title',
-          right: 'today month,basicWeek',
-          ignoreTimezone: false
+          right: 'today prev,next'
         },
+        events: allPlans,
+        dayClick: function(){ console.log('day clicked'); },
+        eventDrop: function(){ console.log('event dropped'); },
+        eventResize: function(){ console.log('event resized'); }
       }
     };
   });
