@@ -9,7 +9,16 @@
  */
 var MainCtrl = angular.module('mealPlannerApp')
   .controller('MainCtrl', function ($scope, planService, allPlans) {
-    $scope.plans = allPlans;
+    $scope.planSources = [{
+          color: '#dff0d8',
+          textColor: '#333',
+          events: allPlans
+        },{
+          color: '#d9edf7',
+          textColor: '#333',
+          events: planService.getSuggestions()
+        }
+      ];
 
     $scope.uiConfig = {
       calendar:{
@@ -20,10 +29,9 @@ var MainCtrl = angular.module('mealPlannerApp')
           center: 'title',
           right: 'today prev,next'
         },
-        events: allPlans,
-        dayClick: function(){ console.log('day clicked'); },
-        eventDrop: function(){ console.log('event dropped'); },
-        eventResize: function(){ console.log('event resized'); }
+        dayClick: function(date, jsEvent, view){
+          planService.addPlan({title: date.format(), start: date.format()});
+        }
       }
     };
   });

@@ -15,7 +15,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ui.calendar'
+    'ui.calendar',
+    'firebase'
   ])
   .config(function ($routeProvider) {
     $routeProvider
