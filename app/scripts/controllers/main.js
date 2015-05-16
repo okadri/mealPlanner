@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name dinnerPlannerApp.controller:MainCtrl
+ * @name mealPlannerApp.controller:MainCtrl
  * @description
  * # MainCtrl
- * Controller of the dinnerPlannerApp
+ * Controller of the mealPlannerApp
  */
-var MainCtrl = angular.module('dinnerPlannerApp')
+var MainCtrl = angular.module('mealPlannerApp')
   .controller('MainCtrl', function ($scope, planService, allPlans) {
     $scope.plans = allPlans;
 

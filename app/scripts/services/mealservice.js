@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc service
- * @name dinnerPlannerApp.mealService
+ * @name mealPlannerApp.mealService
  * @description
  * # mealService
- * Factory in the dinnerPlannerApp.
+ * Factory in the mealPlannerApp.
  */
-angular.module('dinnerPlannerApp')
+angular.module('mealPlannerApp')
   .factory('Meal', function() {
   	function Meal(mealData) {
   		if (mealData) {

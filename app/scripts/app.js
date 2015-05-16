@@ -2,14 +2,14 @@
 
 /**
  * @ngdoc overview
- * @name dinnerPlannerApp
+ * @name mealPlannerApp
  * @description
- * # dinnerPlannerApp
+ * # mealPlannerApp
  *
  * Main module of the application.
  */
 angular
-  .module('dinnerPlannerApp', [
+  .module('mealPlannerApp', [
     'ngAnimate',
     'ngResource',
     'ngRoute',
