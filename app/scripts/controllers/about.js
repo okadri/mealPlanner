@@ -8,7 +8,7 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('AboutCtrl', function ($scope) {
+  .controller('AboutCtrl', this.AboutCtrl = function ($scope) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',

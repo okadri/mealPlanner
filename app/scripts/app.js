@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-angular
+window.mealPlannerApp = angular
   .module('mealPlannerApp', [
     'ngAnimate',
     'ngResource',
@@ -16,7 +16,8 @@ angular
     'ngSanitize',
     'ngTouch',
     'ui.calendar',
-    'firebase'
+    'firebase',
+    'ui.bootstrap'
   ])
   .config(function ($routeProvider) {
     $routeProvider
