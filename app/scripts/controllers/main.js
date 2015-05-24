@@ -21,11 +21,12 @@ angular.module('mealPlannerApp')
       }
     ];
 
-    $scope.startModal = function() {
+    $scope.startModal = function(date) {
   		var modalInstance = $modal.open({
   			templateUrl: '/views/editplan.html',
         controller: EditplanCtrl,
   			resolve: {
+          allMeals: EditplanCtrl.getAllMeals,
   				meal: function () {
   					return $scope.meal;
   				}
@@ -33,7 +34,7 @@ angular.module('mealPlannerApp')
   		});
 
   		modalInstance.result.then(function (meal) {
-        console.log('modal result', meal);
+        planService.addPlan({title: meal, start: date.format()});
   		});
   	};
 
@@ -47,7 +48,7 @@ angular.module('mealPlannerApp')
           right: 'today prev,next'
         },
         dayClick: function(date, jsEvent, view){
-          $scope.startModal();
+          $scope.startModal(date);
         }
       }
     };

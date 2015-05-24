@@ -53,7 +53,7 @@ angular.module('mealPlannerApp')
       getAll: function () {
         var deferred = $q.defer();
 
-
+        this._pool = [1,2,3,4,5,6,7,8,9];
         deferred.resolve(this._pool);
         return deferred.promise;
       },

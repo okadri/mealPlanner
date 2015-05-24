@@ -7,7 +7,7 @@
       {{ meal || 'Click me to select a meal, yo!' }}
     </a>
     <ul class="dropdown-menu">
-      <li ng-repeat="choice in [1,2,3,4,5]">
+      <li ng-repeat="choice in allMeals">
         <a ng-click="setMeal(choice)">Meal {{choice}}</a>
       </li>
     </ul>
