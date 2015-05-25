@@ -1,9 +1,12 @@
+<input type="text" class="form-control" placeholder="Search"
+ng-model="search" autofocus>
+<hr />
 <div class="list-group">
-  <a ng-repeat="meal in allMeals"
-  class="list-group-item" ng-click="editMeal(meal)">
+  <a ng-repeat="meal in allMeals | filter: search"
+  class="list-group-item clickable" ng-click="editMeal(meal)">
     {{ meal.name }}
   </a>
-  <a class="list-group-item list-group-item-info" ng-click="editMeal()">
+  <a class="list-group-item list-group-item-info clickable" ng-click="editMeal()">
     New Meal
   </a>
 </div>

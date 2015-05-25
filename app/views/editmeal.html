@@ -4,16 +4,37 @@
 <div class="modal-body">
   <form class="form-horizontal">
     <div class="form-group">
-      <label for="name" class="col-sm-2 control-label">Meal Name</label>
-      <div class="col-sm-10">
+      <label for="name" class="col-sm-3 control-label">Meal Name</label>
+      <div class="col-sm-9">
         <input type="text" class="form-control" ng-model="meal.name"
         id="inputEmail3" placeholder="eg. Pasta">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="type" class="col-sm-3 control-label">Meat Type</label>
+      <div class="col-sm-9">
+        <select ng-model="meal.meatId" class="form-control">
+          <option ng-repeat="meatType in meatTypes"
+            value="{{ meatType.id }}"
+            ng-selected="meal.meatId == meatType.id">
+            {{ meatType.name }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="frequency" class="col-sm-3 control-label">Frequency</label>
+      <div class="col-sm-9">
+        <select ng-model="meal.frequency" class="form-control">
+          <option ng-repeat="frequency in frequencies | orderBy : numOfWks"
+            value="{{ frequency.numOfWks }}"
+            ng-selected="meal.frequency == frequency.numOfWks">
+            {{ frequency.description }}</option>
+        </select>
       </div>
     </div>
   </form>
 </div>
 <div class="modal-footer">
-  {{meal}}
   <button class="btn btn-primary" ng-click="saveMeal()">Save</button>
   <button class="btn btn-default" ng-click="cancel()">Cancel</button>
 </div>
