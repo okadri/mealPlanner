@@ -8,7 +8,7 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('MealsCtrl', this.MealsCtrl = function ($scope, $modal, allMeals) {
+  .controller('MealsCtrl', this.MealsCtrl = function ($scope, $modal, mealService, allMeals) {
     $scope.allMeals = allMeals;
 
     $scope.editMeal = function(meal) {

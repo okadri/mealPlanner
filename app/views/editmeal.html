@@ -1,1 +1,19 @@
-<p>This is the editMeal view. {{ meal }}</p>
+<div class="modal-header">
+<h3>Edit Meal</h3>
+</div>
+<div class="modal-body">
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label for="name" class="col-sm-2 control-label">Meal Name</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" ng-model="meal.name"
+        id="inputEmail3" placeholder="eg. Pasta">
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  {{meal}}
+  <button class="btn btn-primary" ng-click="saveMeal()">Save</button>
+  <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+</div>

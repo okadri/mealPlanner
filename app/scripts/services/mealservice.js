@@ -59,12 +59,17 @@ angular.module('mealPlannerApp')
         deferred.resolve(this._pool);
         return deferred.promise;
       },
-      save: function (meal) {
+      saveMeal: function (meal) {
         var deferred = $q.defer();
+        var savedMeal;
 
-        this._pool.$save(meal);
+        if (meal.$id) {
+          savedMeal = this._pool.$save(meal);
+        } else {
+          savedMeal = this._pool.$add(meal);
+        }
 
-        deferred.resolve(this._pool);
+        deferred.resolve(savedMeal);
         return deferred.promise;
       }
     };

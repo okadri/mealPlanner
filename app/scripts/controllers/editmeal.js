@@ -8,11 +8,11 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('EditmealCtrl', this.EditmealCtrl = function ($scope, meal) {
-    $scope.meal = meal;
+  .controller('EditmealCtrl', this.EditmealCtrl = function ($scope, $modalInstance, meal) {
+    $scope.meal = meal || {};
 
-    $scope.saveMeal = function(meal) {
-      $modalInstance.close(meal);
+    $scope.saveMeal = function() {
+      $modalInstance.close($scope.meal);
     };
 
     $scope.cancel = function () {
