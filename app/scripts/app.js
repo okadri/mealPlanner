@@ -28,9 +28,16 @@ window.mealPlannerApp = angular
     			allPlans: MainCtrl.getAllPlans
     		}
       })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
+      .when('/meals', {
+        templateUrl: 'views/meals.html',
+        controller: 'MealsCtrl',
+        resolve: {
+    			allMeals: MealsCtrl.getAllMeals
+    		}
+      })
+      .when('/meals/:id', {
+        templateUrl: 'views/editmeal.html',
+        controller: 'EditmealCtrl'
       })
       .otherwise({
         redirectTo: '/'

@@ -49,6 +49,9 @@ angular.module('mealPlannerApp')
         },
         dayClick: function(date, jsEvent, view){
           $scope.startModal(date);
+        },
+        eventClick: function( event, jsEvent, view ) {
+          debugger;
         }
       }
     };

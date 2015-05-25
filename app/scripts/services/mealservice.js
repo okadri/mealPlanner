@@ -21,7 +21,7 @@ angular.module('mealPlannerApp')
   	};
   	return Meal;
   })
-  .factory('mealService', function ($q, Meal) {
+  .factory('mealService', function ($q, $firebaseArray, Meal) {
     return {
       _pool: null,
       _findById: function(arr, id) {
@@ -53,13 +53,16 @@ angular.module('mealPlannerApp')
       getAll: function () {
         var deferred = $q.defer();
 
-        this._pool = [1,2,3,4,5,6,7,8,9];
+        var ref = new Firebase('https://meal-planner.firebaseIO.com/meals');
+        this._pool = $firebaseArray(ref);
+
         deferred.resolve(this._pool);
         return deferred.promise;
       },
       save: function (meal) {
         var deferred = $q.defer();
 
+        this._pool.$save(meal);
 
         deferred.resolve(this._pool);
         return deferred.promise;
