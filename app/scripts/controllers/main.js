@@ -50,17 +50,39 @@ angular.module('mealPlannerApp')
   		});
   	};
 
+    $scope.addIngredientsByDateRange = function (start, end) {
+      var modalInstance = $modal.open({
+  			templateUrl: '/views/addIngredients.html',
+        controller: AddingredientsCtrl,
+  			resolve: {
+          meals: function() {
+            return mealService.addIngredientsByDateRange(start,end);
+          }
+  			}
+  		});
+
+  		modalInstance.result.then(function (meal) {
+  		});
+    };
+
     $scope.uiConfig = {
       calendar:{
         height: 450,
         editable: true,
+        selectable: true,
         header:{
           left: 'month agendaWeek',
           center: 'title',
           right: 'today prev,next'
         },
         dayClick: function(date, jsEvent, view){
-          $scope.startModal(date);
+          var plan = planService.findOneByDate(date);
+          if (!plan) {
+            $scope.startModal(date);
+          }
+        },
+        select: function(startDate, endDate, allDay, jsEvent, view) {
+          $scope.addIngredientsByDateRange(startDate, endDate);
         },
         eventClick: function( event, jsEvent, view ) {
           $scope.startModal(event.start, event);

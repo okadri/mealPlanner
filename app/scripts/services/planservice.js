@@ -50,6 +50,18 @@ angular.module('mealPlannerApp')
       getOneById: function (id) {
         return this._findById(this._pool, id);
       },
+      findOneByDate: function (date) {
+        for(var el in this._pool) {
+      		// hasOwnProperty ensures prototypes aren't considered
+      		if(this._pool.hasOwnProperty(el)) {
+      			if(this._pool[el].start === date.format()) {
+              return this._pool[el];
+            }
+      		}
+      	}
+
+      	return undefined;
+      },
       savePlan: function (plan) {
         var deferred = $q.defer();
         var savedPlan;

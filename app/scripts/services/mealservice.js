@@ -21,9 +21,9 @@ angular.module('mealPlannerApp')
   	};
   	return Meal;
   })
-  .factory('mealService', function ($q, $firebaseArray, $firebaseObject, Meal) {
+  .factory('mealService', function ($q, $firebaseArray, $firebaseObject, Meal, planService) {
     return {
-      _pool: null,
+      _pool: [],
       _findById: function(arr, id) {
       	for(var el in arr) {
       		// hasOwnProperty ensures prototypes aren't considered
@@ -48,13 +48,16 @@ angular.module('mealPlannerApp')
         return deferred.promise;
       },
       getOneById: function (id) {
-        var deferred = $q.defer();
+        var meal;
 
-        var mealRef = new Firebase(FIREBASE_URL + '/meals/' + id);
-        var meal = $firebaseObject(mealRef);
+        if (this._pool.length > 0) {
+          meal = this._findById(this._pool, id)
+        } else {
+          var mealRef = new Firebase(FIREBASE_URL + '/meals/' + id);
+          meal = $firebaseObject(mealRef);
+        }
 
-        deferred.resolve(meal);
-        return deferred.promise;
+        return meal;
       },
       saveMeal: function (meal) {
         var deferred = $q.defer();
@@ -76,6 +79,20 @@ angular.module('mealPlannerApp')
       },
       deleteMeal: function (meal) {
         this._pool.$remove(meal);
+      },
+      addIngredientsByDateRange: function(start, end) {
+        var deferred = $q.defer();
+        var ingredients = [];
+
+        for(var i=start; start.isBefore(end); start.add(1,'day')) {
+          var plan = planService.findOneByDate(i);
+          angular.forEach(plan.meal.ingredients, function(ingredient) {
+            ingredients.push(ingredient);
+          });
+        }
+
+        deferred.resolve(ingredients);
+        return deferred.promise;
       }
     };
   });
