@@ -10,6 +10,7 @@
 angular.module('mealPlannerApp')
   .controller('EditplanCtrl', this.EditplanCtrl = function ($scope, $modalInstance, mealService, planService, mealId, plan, allMeals) {
     $scope.allMeals = allMeals;
+    $scope.mealId = mealId;
 
     mealService.getOneById(mealId).then(function(res){
       $scope.meal = res;
@@ -20,7 +21,7 @@ angular.module('mealPlannerApp')
     };
 
     $scope.deletePlan = function() {
-      $scope.meal = null;
+      $scope.meal = $scope.mealId = null;
       planService.deletePlan(plan);
     };
 

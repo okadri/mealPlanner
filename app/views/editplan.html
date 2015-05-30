@@ -9,7 +9,7 @@
   </select>
 </div>
 <div class="modal-footer">
-	<button class="btn btn-danger pull-left" ng-click="deletePlan()">
-    Clear this day</button>
+	<button class="btn btn-danger pull-left" ng-click="deletePlan()"
+    ng-if="mealId != null">Clear this day</button>
 	<button class="btn btn-default" ng-click="cancel()">Cancel</button>
 </div>
