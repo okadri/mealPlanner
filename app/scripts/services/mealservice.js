@@ -21,14 +21,14 @@ angular.module('mealPlannerApp')
   	};
   	return Meal;
   })
-  .factory('mealService', function ($q, $firebaseArray, Meal) {
+  .factory('mealService', function ($q, $firebaseArray, $firebaseObject, Meal) {
     return {
       _pool: null,
       _findById: function(arr, id) {
       	for(var el in arr) {
       		// hasOwnProperty ensures prototypes aren't considered
       		if(arr.hasOwnProperty(el)) {
-      			if(arr[el].id === id) {
+      			if(arr[el].$id === id) {
               return arr[el];
             }
       		}
@@ -36,18 +36,6 @@ angular.module('mealPlannerApp')
 
       	return undefined;
       },
-  		_retrieveInstance: function(meal) {
-  			var instance = this._findById(this._pool, meal.id);
-
-  			if (instance) {
-  				instance.setData(meal);
-  			} else {
-  				instance = new Meal(meal);
-  				this._pool.push(instance);
-  			}
-
-  			return instance;
-  		},
 
       // Public methods
       getAll: function () {
@@ -57,6 +45,15 @@ angular.module('mealPlannerApp')
         this._pool = $firebaseArray(ref);
 
         deferred.resolve(this._pool);
+        return deferred.promise;
+      },
+      getOneById: function (id) {
+        var deferred = $q.defer();
+
+        var mealRef = new Firebase(FIREBASE_URL + '/meals/' + id);
+        var meal = $firebaseObject(mealRef);
+
+        deferred.resolve(meal);
         return deferred.promise;
       },
       saveMeal: function (meal) {

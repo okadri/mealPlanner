@@ -28,7 +28,7 @@ angular.module('mealPlannerApp')
       	for(var el in arr) {
       		// hasOwnProperty ensures prototypes aren't considered
       		if(arr.hasOwnProperty(el)) {
-      			if(arr[el].id === id) {
+      			if(arr[el].$id === id) {
               return arr[el];
             }
       		}
@@ -36,18 +36,6 @@ angular.module('mealPlannerApp')
 
       	return undefined;
       },
-  		_retrieveInstance: function(plan) {
-  			var instance = this._findById(this._pool, plan.id);
-
-  			if (instance) {
-  				instance.setData(plan);
-  			} else {
-  				instance = new Plan(plan);
-  				this._pool.push(instance);
-  			}
-
-  			return instance;
-  		},
 
       // Public methods
       getAll: function () {
@@ -59,13 +47,24 @@ angular.module('mealPlannerApp')
         deferred.resolve(this._pool);
         return deferred.promise;
       },
-      addPlan: function (plan) {
+      savePlan: function (plan) {
         var deferred = $q.defer();
+        var savedPlan;
 
-        this._pool.$add(plan);
+        plan.stick = true
+
+        if (plan.$id) {
+          savedPlan = this._pool.$save(plan);
+        } else {
+          savedPlan = this._pool.$add(plan);
+        }
 
         deferred.resolve(this._pool);
         return deferred.promise;
+      },
+      deletePlan: function (plan) {
+        var instance = this._findById(this._pool, plan.$id);
+        this._pool.$remove(instance);
       },
       getSuggestions: function() {
         return [];

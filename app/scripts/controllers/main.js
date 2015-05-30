@@ -8,7 +8,7 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('MainCtrl', this.MainCtrl = function ($scope, $modal, planService, allPlans) {
+  .controller('MainCtrl', this.MainCtrl = function ($scope, $modal, planService, mealService, allPlans) {
     $scope.planSources = [
       {
         color: '#dff0d8',
@@ -21,20 +21,28 @@ angular.module('mealPlannerApp')
       }
     ];
 
-    $scope.startModal = function(date) {
+    $scope.startModal = function(date, plan) {
   		var modalInstance = $modal.open({
   			templateUrl: '/views/editplan.html',
         controller: EditplanCtrl,
   			resolve: {
           allMeals: EditplanCtrl.getAllMeals,
-  				meal: function () {
-  					return $scope.meal;
+  				mealId: function () {
+            if (!plan) return null;
+  					return plan.mealId;
   				}
   			}
   		});
 
   		modalInstance.result.then(function (meal) {
-        planService.addPlan({title: meal, start: date.format()});
+        var toBeSaved = plan || {};
+
+        toBeSaved.title= meal.name;
+        toBeSaved.mealId = meal.$id;
+        toBeSaved.meal = meal;
+        toBeSaved.start = date.format();
+
+        planService.savePlan(toBeSaved);
   		});
   	};
 
@@ -51,7 +59,7 @@ angular.module('mealPlannerApp')
           $scope.startModal(date);
         },
         eventClick: function( event, jsEvent, view ) {
-          debugger;
+          $scope.startModal(event.start, event);
         }
       }
     };

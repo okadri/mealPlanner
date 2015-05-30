@@ -2,16 +2,11 @@
 <h3>Edit Plan</h3>
 </div>
 <div class="modal-body">
-  <span class="dropdown" dropdown on-toggle="toggled(open)">
-    <a href class="dropdown-toggle" dropdown-toggle>
-      {{ meal || 'Click me to select a meal, yo!' }}
-    </a>
-    <ul class="dropdown-menu">
-      <li ng-repeat="choice in allMeals">
-        <a ng-click="setMeal(choice)">Meal {{choice}}</a>
-      </li>
-    </ul>
-  </span>
+  <select ng-options="choice as choice.name for choice in allMeals track by choice.$id"
+     class="form-control"
+     ng-model="meal" ng-change="setMeal(meal)" ng-required="true">
+     <option value="">Select a meal</option>
+  </select>
 </div>
 <div class="modal-footer">
 	<button class="btn btn-default" ng-click="cancel()">Cancel</button>
