@@ -2,7 +2,7 @@
 ng-model="search" autofocus>
 <hr />
 <div class="list-group">
-  <a ng-repeat="meal in allMeals | filter: search"
+  <a ng-repeat="meal in allMeals | filter: search | orderBy: 'name'"
   class="list-group-item clickable" ng-click="editMeal(meal)">
     {{ meal.name }}
   </a>

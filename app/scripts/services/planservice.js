@@ -53,7 +53,7 @@ angular.module('mealPlannerApp')
       getAll: function () {
         var deferred = $q.defer();
 
-        var ref = new Firebase('https://meal-planner.firebaseIO.com/plans');
+        var ref = new Firebase(FIREBASE_URL + '/plans');
         this._pool = $firebaseArray(ref);
 
         deferred.resolve(this._pool);

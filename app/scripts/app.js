@@ -1,5 +1,7 @@
 'use strict';
 
+var FIREBASE_URL = 'https://meal-planner.firebaseIO.com';
+
 /**
  * @ngdoc overview
  * @name mealPlannerApp

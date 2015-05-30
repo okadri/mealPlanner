@@ -53,7 +53,7 @@ angular.module('mealPlannerApp')
       getAll: function () {
         var deferred = $q.defer();
 
-        var ref = new Firebase('https://meal-planner.firebaseIO.com/meals');
+        var ref = new Firebase(FIREBASE_URL + '/meals');
         this._pool = $firebaseArray(ref);
 
         deferred.resolve(this._pool);
@@ -62,6 +62,11 @@ angular.module('mealPlannerApp')
       saveMeal: function (meal) {
         var deferred = $q.defer();
         var savedMeal;
+
+        if (!meal.seasonal) {
+          delete meal.startDate;
+          delete meal.endDate;
+        }
 
         if (meal.$id) {
           savedMeal = this._pool.$save(meal);
