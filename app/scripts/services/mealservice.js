@@ -76,6 +76,9 @@ angular.module('mealPlannerApp')
 
         deferred.resolve(savedMeal);
         return deferred.promise;
+      },
+      deleteMeal: function (meal) {
+        this._pool.$remove(meal);
       }
     };
   });

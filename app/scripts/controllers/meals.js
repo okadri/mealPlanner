@@ -26,6 +26,10 @@ angular.module('mealPlannerApp')
         mealService.saveMeal(meal);
       });
     };
+
+    $scope.deleteMeal = function(meal) {
+      mealService.deleteMeal(meal);
+    };
   });
 
 MealsCtrl.getAllMeals = function(mealService) {
