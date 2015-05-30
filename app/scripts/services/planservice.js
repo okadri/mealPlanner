@@ -47,6 +47,9 @@ angular.module('mealPlannerApp')
         deferred.resolve(this._pool);
         return deferred.promise;
       },
+      getOneById: function (id) {
+        return this._findById(this._pool, id);
+      },
       savePlan: function (plan) {
         var deferred = $q.defer();
         var savedPlan;
@@ -63,7 +66,7 @@ angular.module('mealPlannerApp')
         return deferred.promise;
       },
       deletePlan: function (plan) {
-        var instance = this._findById(this._pool, plan.$id);
+        var instance = this.getOneById(plan.$id);
         this._pool.$remove(instance);
       },
       getSuggestions: function() {

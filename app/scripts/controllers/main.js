@@ -35,7 +35,7 @@ angular.module('mealPlannerApp')
   		});
 
   		modalInstance.result.then(function (meal) {
-        var toBeSaved = plan || {};
+        var toBeSaved = planService.getOneById(plan.$id) || {};
 
         toBeSaved.title= meal.name;
         toBeSaved.mealId = meal.$id;
