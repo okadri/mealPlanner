@@ -30,12 +30,16 @@ angular.module('mealPlannerApp')
   				mealId: function () {
             if (!plan) return null;
   					return plan.mealId;
+  				},
+  				plan: function () {
+            if (!plan) return null;
+  					return plan;
   				}
   			}
   		});
 
   		modalInstance.result.then(function (meal) {
-        var toBeSaved = planService.getOneById(plan.$id) || {};
+        var toBeSaved = plan ? planService.getOneById(plan.$id) : {};
 
         toBeSaved.title= meal.name;
         toBeSaved.mealId = meal.$id;
