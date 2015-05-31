@@ -49,6 +49,19 @@
         </select>
       </div>
     </div>
+    <div class="form-group">
+      <label for="ingredients" class="col-sm-3 control-label">Ingredients</label>
+      <div class="col-sm-9">
+        <tags-input
+            ng-model="meal.ingredients"
+            placeholder="Add an Ingredient"
+            replace-spaces-with-dashes="false"
+            add-on-comma="true"
+            add-on-space="false">
+          <auto-complete source="queryIngredients($query)" min-length="2"></auto-complete>
+        </tags-input>
+      </div>
+    </div>
     <div class="form-group" ng-show="meal.seasonal">
       <label for="meal" class="col-sm-3 control-label">End Date</label>
       <div class="col-sm-9">

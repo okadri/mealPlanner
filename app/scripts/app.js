@@ -19,7 +19,8 @@ window.mealPlannerApp = angular
     'ngTouch',
     'ui.calendar',
     'firebase',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'ngTagsInput'
   ])
   .config(function ($routeProvider) {
     $routeProvider

@@ -8,6 +8,6 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('AddingredientsCtrl', this.AddingredientsCtrl = function ($scope, meals) {
-    $scope.meals = meals;
+  .controller('AddingredientsCtrl', this.AddingredientsCtrl = function ($scope, ingredients) {
+    $scope.ingredients = ingredients;
   });

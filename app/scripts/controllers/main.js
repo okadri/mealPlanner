@@ -55,8 +55,8 @@ angular.module('mealPlannerApp')
   			templateUrl: '/views/addIngredients.html',
         controller: AddingredientsCtrl,
   			resolve: {
-          meals: function() {
-            return mealService.addIngredientsByDateRange(start,end);
+          ingredients: function() {
+            return mealService.findIngredientsByDateRange(start,end);
           }
   			}
   		});

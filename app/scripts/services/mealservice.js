@@ -80,7 +80,7 @@ angular.module('mealPlannerApp')
       deleteMeal: function (meal) {
         this._pool.$remove(meal);
       },
-      addIngredientsByDateRange: function(start, end) {
+      findIngredientsByDateRange: function(start, end) {
         var deferred = $q.defer();
         var ingredients = [];
 

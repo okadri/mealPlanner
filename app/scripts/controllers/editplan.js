@@ -12,9 +12,7 @@ angular.module('mealPlannerApp')
     $scope.allMeals = allMeals;
     $scope.mealId = mealId;
 
-    mealService.getOneById(mealId).then(function(res){
-      $scope.meal = res;
-    })
+    $scope.meal = mealService.getOneById(mealId)
 
     $scope.setMeal = function() {
       $modalInstance.close($scope.meal);
