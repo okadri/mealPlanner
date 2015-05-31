@@ -8,7 +8,7 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('EditmealCtrl', this.EditmealCtrl = function ($scope, $modalInstance, meal, meatTypeService, frequencyService) {
+  .controller('EditmealCtrl', this.EditmealCtrl = function ($scope, $modalInstance, mealService, meal, meatTypeService, frequencyService) {
     $scope.meal = meal || {};
     $scope.meatTypes = meatTypeService.getAll();
     $scope.frequencies = frequencyService.getAll();
@@ -22,4 +22,7 @@ angular.module('mealPlannerApp')
       $modalInstance.dismiss('cancel');
     };
 
+    $scope.queryIngredients = function(q) {
+      return mealService.searchIngredients(q);
+    }
   });

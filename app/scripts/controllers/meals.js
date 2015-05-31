@@ -18,6 +18,9 @@ angular.module('mealPlannerApp')
         resolve: {
           meal: function () {
             return meal;
+          },
+          allIngredients: function() {
+            return mealService.getAllIngredients();
           }
         }
       });

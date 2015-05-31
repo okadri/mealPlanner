@@ -21,9 +21,10 @@ angular.module('mealPlannerApp')
   	};
   	return Meal;
   })
-  .factory('mealService', function ($q, $firebaseArray, $firebaseObject, Meal, planService) {
+  .factory('mealService', function ($q, $filter, $firebaseArray, $firebaseObject, Meal, planService) {
     return {
       _pool: [],
+      _allIngredients: [],
       _findById: function(arr, id) {
       	for(var el in arr) {
       		// hasOwnProperty ensures prototypes aren't considered
@@ -79,6 +80,30 @@ angular.module('mealPlannerApp')
       },
       deleteMeal: function (meal) {
         this._pool.$remove(meal);
+      },
+      getAllIngredients: function() {
+        var scope = this;
+
+        for(var i in scope._pool) {
+          angular.forEach(scope._pool[i].ingredients, function(ingredient) {
+            if (scope._allIngredients.indexOf(ingredient.text) < 0) {
+              scope._allIngredients.push(ingredient.text);
+            }
+          });
+        }
+
+        return scope._allIngredients;
+      },
+      searchIngredients: function(q) {
+        var deferred = $q.defer();
+
+        // Update allIngredients
+        this.getAllIngredients();
+
+        var matchingIngredients = $filter('filter')(this._allIngredients, q);
+
+        deferred.resolve(matchingIngredients);
+        return deferred.promise;
       },
       findIngredientsByDateRange: function(start, end) {
         var deferred = $q.defer();
