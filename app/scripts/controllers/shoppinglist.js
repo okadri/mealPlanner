@@ -17,6 +17,7 @@ angular.module('mealPlannerApp')
 
     $scope.addItem = function(item) {
       shoppingListService.addItem(item);
+      $scope.newItem = '';
     };
 
     $scope.deleteItem = function(item) {
