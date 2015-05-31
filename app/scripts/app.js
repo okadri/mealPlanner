@@ -42,6 +42,14 @@ window.mealPlannerApp = angular
         templateUrl: 'views/editmeal.html',
         controller: 'EditmealCtrl'
       })
+      .when('/shoppingList', {
+        templateUrl: 'views/shoppinglist.html',
+        controller: 'ShoppinglistCtrl',
+        resolve: {
+          allMeals: ShoppinglistCtrl.getAllMeals,
+    			allItems: ShoppinglistCtrl.getAllItems
+    		}
+      })
       .otherwise({
         redirectTo: '/'
       });
