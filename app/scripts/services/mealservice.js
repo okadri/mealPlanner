@@ -111,9 +111,14 @@ angular.module('mealPlannerApp')
 
         for(var i=start; start.isBefore(end); start.add(1,'day')) {
           var plan = planService.findOneByDate(i);
-          angular.forEach(plan.meal.ingredients, function(ingredient) {
-            ingredients.push(ingredient);
-          });
+          if (plan && plan.meal) {
+            angular.forEach(plan.meal.ingredients, function(ingredient) {
+              var ingredientsText = ingredients.map(function(e) { return e.text; });
+              if (ingredientsText.indexOf(ingredient.text) < 0) {
+                ingredients.push(ingredient);
+              }
+            });
+          }
         }
 
         deferred.resolve(ingredients);
