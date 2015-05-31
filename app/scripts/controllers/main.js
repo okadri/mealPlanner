@@ -8,7 +8,7 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('MainCtrl', this.MainCtrl = function ($scope, $modal, planService, mealService, allPlans) {
+  .controller('MainCtrl', this.MainCtrl = function ($scope, $location, $modal, planService, mealService, allPlans) {
     $scope.planSources = [
       {
         color: '#dff0d8',
@@ -57,11 +57,13 @@ angular.module('mealPlannerApp')
   			resolve: {
           ingredients: function() {
             return mealService.findIngredientsByDateRange(start,end);
-          }
+          },
+          shoppingItems: AddingredientsCtrl.getAllItems
   			}
   		});
 
-  		modalInstance.result.then(function (meal) {
+  		modalInstance.result.then(function () {
+        $location.path('/shoppingList');
   		});
     };
 

@@ -34,10 +34,21 @@ angular.module('mealPlannerApp')
         deferred.resolve(this._pool);
         return deferred.promise;
       },
+      addItems: function (items) {
+        var deferred = $q.defer();
+
+        for (var i in items) {
+          this.addItem(items[i].text);
+        }
+
+        deferred.resolve(this._pool);
+        return deferred.promise;
+      },
       addItem: function (item) {
         var deferred = $q.defer();
 
-        if (this._pool.indexOf(item) < 0) {
+        var ingredientsText = this._pool.map(function(e) { return e.$value; });
+        if (ingredientsText.indexOf(item) < 0) {
           this._pool.$add(item);
         }
 
