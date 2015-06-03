@@ -72,6 +72,7 @@ angular.module('mealPlannerApp')
         height: 450,
         editable: true,
         selectable: true,
+        timezone: 'local',
         header:{
           left: 'month agendaWeek',
           center: 'title',
@@ -84,7 +85,10 @@ angular.module('mealPlannerApp')
           }
         },
         select: function(startDate, endDate, allDay, jsEvent, view) {
-          $scope.addIngredientsByDateRange(startDate, endDate);
+          var plan = planService.findOneByDate(startDate);
+          if (plan) {
+            $scope.addIngredientsByDateRange(startDate, endDate);
+          }
         },
         eventClick: function( event, jsEvent, view ) {
           $scope.startModal(event.start, event);
