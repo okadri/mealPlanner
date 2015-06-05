@@ -8,10 +8,13 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('LoginCtrl', function ($scope, $firebaseAuth, $location) {
+  .controller('LoginCtrl', function ($scope, $location, currentAuth) {
     var ref = new Firebase(FIREBASE_URL);
-    var auth = $firebaseAuth(ref);
-    if (auth.$getAuth()) $location.path("/");
+
+    if (currentAuth) {
+      console.log("already logged in, redirecting to main");
+      $location.path("/");
+    }
 
     $scope.login = function() {
       ref.authWithPassword({
