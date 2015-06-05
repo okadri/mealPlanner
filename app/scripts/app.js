@@ -21,34 +21,73 @@ window.mealPlannerApp = angular
     'firebase',
     'ui.bootstrap',
     'ngTagsInput'
-  ])
-  .config(function ($routeProvider) {
+  ]);
+
+//Generates the $firebaseAuth instance
+mealPlannerApp.factory('Auth', function ($firebaseAuth) {
+  var ref = new Firebase(FIREBASE_URL);
+  return $firebaseAuth(ref);
+});
+
+//redirects to homepage if $requireAuth rejects
+mealPlannerApp.run(["$rootScope", "$location", function($rootScope, $location) {
+  $rootScope.$on("$routeChangeError", function(event, next, previous, error) {
+    if (error === "AUTH_REQUIRED") {
+      $location.path("/login");
+    }
+  });
+}]);
+
+mealPlannerApp.config(function ($routeProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl',
     		resolve: {
-    			allPlans: MainCtrl.getAllPlans
+    			allPlans: MainCtrl.getAllPlans,
+          currentAuth: function(Auth) {
+            return Auth.$requireAuth();
+          }
     		}
       })
       .when('/meals', {
         templateUrl: 'views/meals.html',
         controller: 'MealsCtrl',
         resolve: {
-    			allMeals: MealsCtrl.getAllMeals
+    			allMeals: MealsCtrl.getAllMeals,
+          currentAuth: function(Auth) {
+            return Auth.$requireAuth();
+          }
     		}
       })
       .when('/meals/:id', {
         templateUrl: 'views/editmeal.html',
-        controller: 'EditmealCtrl'
+        controller: 'EditmealCtrl',
+        resolve: {
+          currentAuth: function(Auth) {
+            return Auth.$requireAuth();
+          }
+    		}
       })
       .when('/shoppingList', {
         templateUrl: 'views/shoppinglist.html',
         controller: 'ShoppinglistCtrl',
         resolve: {
           allMeals: ShoppinglistCtrl.getAllMeals,
-    			allItems: ShoppinglistCtrl.getAllItems
+    			allItems: ShoppinglistCtrl.getAllItems,
+          currentAuth: function(Auth) {
+            return Auth.$requireAuth();
+          }
     		}
+      })
+      .when('/login', {
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl',
+        resolve: {
+          currentAuth: function(Auth) {
+            return Auth.$waitForAuth();
+          }
+        }
       })
       .otherwise({
         redirectTo: '/'

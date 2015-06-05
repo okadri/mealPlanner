@@ -42,7 +42,8 @@ angular.module('mealPlannerApp')
         var deferred = $q.defer();
 
         var ref = new Firebase(FIREBASE_URL + '/plans');
-        this._pool = $firebaseArray(ref);
+        var query = ref.orderByChild("start").limitToLast(80);
+        this._pool = $firebaseArray(query);
 
         deferred.resolve(this._pool);
         return deferred.promise;

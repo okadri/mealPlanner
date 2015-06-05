@@ -8,7 +8,8 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('MainCtrl', this.MainCtrl = function ($scope, $location, $modal, planService, mealService, allPlans) {
+  .controller('MainCtrl', this.MainCtrl = function ($scope, Auth, $location, $modal, planService, mealService, allPlans) {
+
     $scope.planSources = [
       {
         color: '#dff0d8',
