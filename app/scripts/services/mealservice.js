@@ -138,12 +138,25 @@ angular.module('mealPlannerApp')
 
         while(allMeals.length > num && suggestions.length < num) {
           rand = Math.floor(Math.random() * allMeals.length);
+          dateWindow = moment();
+          var foundConflict = false;
 
-          conflictingPlans = allPlans.filter(function(p) {
-            dateWindow.add(-allMeals[rand].frequency, 'week').format('YYYY-MM-DD');
+          angular.forEach(allPlans, function(p) {
+            dateWindow = moment();
+            dateWindow.add(
+              suggestions.length - allMeals[rand].frequency
+              , 'week'
+              ).format('YYYY-MM-DD');
+
             if (p.start > dateWindow.format('YYYY-MM-DD')
             && allMeals[rand].$id === p.mealId) {
-              return p;
+              foundConflict = true;
+            }
+          });
+
+          angular.forEach(suggestions, function(p) {
+            if (allMeals[rand].$id === p.mealId) {
+              foundConflict = true;
             }
           });
 
@@ -151,7 +164,7 @@ angular.module('mealPlannerApp')
             (suggestions.length === 0 && allPlans[allPlans.length-1].meal.meatId !== allMeals[rand].meatId)
             ||
             (suggestions.length > 0 && suggestions[suggestions.length-1].meal.meatId !== allMeals[rand].meatId)
-          ) && conflictingPlans.length === 0 ) {
+          ) && !foundConflict ) {
             if (!planService.findOneByDate(today)) {
               suggestions.push(
                 planService.newPlan(
