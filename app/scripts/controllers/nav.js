@@ -8,8 +8,8 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('NavCtrl', function ($scope, $location) {
+  .controller('NavCtrl', ['$scope', '$location', function ($scope, $location) {
     $scope.isActive = function (viewLocation) {
         return viewLocation === $location.path();
     };
-  });
+  }]);

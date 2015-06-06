@@ -8,7 +8,9 @@
  * Factory in the mealPlannerApp.
  */
 angular.module('mealPlannerApp')
-  .factory('shoppingListService', this.shoppingListService = function ($q, $firebaseArray) {
+  .factory('shoppingListService',
+  ['$q', '$firebaseArray',
+  this.shoppingListService = function ($q, $firebaseArray) {
     return {
       _pool: null,
       _findById: function(arr, id) {
@@ -63,4 +65,4 @@ angular.module('mealPlannerApp')
         this._pool.$remove(instance);
       }
     };
-  });
+  }]);

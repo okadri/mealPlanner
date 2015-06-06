@@ -8,7 +8,9 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('AddingredientsCtrl', this.AddingredientsCtrl = function ($scope, $modalInstance, shoppingListService, ingredients, shoppingItems) {
+  .controller('AddingredientsCtrl',
+  ['$scope', '$modalInstance', 'shoppingListService', 'ingredients', 'shoppingItems',
+  this.AddingredientsCtrl = function ($scope, $modalInstance, shoppingListService, ingredients, shoppingItems) {
     $scope.ingredients = ingredients;
 
     $scope.addItems = function() {
@@ -25,7 +27,7 @@ angular.module('mealPlannerApp')
       var index = $scope.ingredients.indexOf(ingredient);
       $scope.ingredients.splice(index, 1);
     };
-  });
+  }]);
 AddingredientsCtrl.getAllItems = function(shoppingListService) {
   return shoppingListService.getAll();
 };

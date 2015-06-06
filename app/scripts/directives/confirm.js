@@ -7,7 +7,7 @@
  * # confirm
  */
 angular.module('mealPlannerApp')
-  .directive('confirm', function ($document) {
+  .directive('confirm', ['$document', function ($document) {
     return {
       restrict: 'A',
   		scope: {
@@ -73,4 +73,4 @@ angular.module('mealPlannerApp')
   			});
   		}
     };
-  });
+  }]);

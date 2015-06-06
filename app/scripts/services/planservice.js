@@ -21,7 +21,9 @@ angular.module('mealPlannerApp')
   	};
   	return Plan;
   })
-  .factory('planService', function ($q, $firebaseArray, Plan) {
+  .factory('planService',
+  ['$q', '$firebaseArray', 'Plan',
+  function ($q, $firebaseArray, Plan) {
     return {
       _pool: null,
       _findById: function(arr, id) {
@@ -87,4 +89,4 @@ angular.module('mealPlannerApp')
         return [];
       }
     };
-  });
+  }]);

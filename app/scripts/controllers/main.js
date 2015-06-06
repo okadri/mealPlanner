@@ -8,7 +8,9 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('MainCtrl', this.MainCtrl = function ($scope, Auth, $location, $modal, planService, mealService, allPlans) {
+  .controller('MainCtrl',
+  ['$scope', 'Auth', '$location', '$modal', 'planService', 'mealService', 'allPlans',
+  this.MainCtrl = function ($scope, Auth, $location, $modal, planService, mealService, allPlans) {
 
     $scope.planSources = [
       {
@@ -96,7 +98,7 @@ angular.module('mealPlannerApp')
         }
       }
     };
-  });
+  }]);
 
 MainCtrl.getAllPlans = function(planService) {
 	return planService.getAll();

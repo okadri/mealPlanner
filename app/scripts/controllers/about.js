@@ -8,10 +8,5 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('AboutCtrl', this.AboutCtrl = function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+  .controller('AboutCtrl', ['$scope', this.AboutCtrl = function ($scope) {
+  }]);

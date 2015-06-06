@@ -21,7 +21,9 @@ angular.module('mealPlannerApp')
   	};
   	return Meal;
   })
-  .factory('mealService', function ($q, $filter, $firebaseArray, $firebaseObject, Meal, planService) {
+  .factory('mealService',
+  ['$q', '$filter', '$firebaseArray', '$firebaseObject', 'Meal', 'planService',
+  function ($q, $filter, $firebaseArray, $firebaseObject, Meal, planService) {
     return {
       _pool: [],
       _allIngredients: [],
@@ -52,7 +54,7 @@ angular.module('mealPlannerApp')
         var meal;
 
         if (this._pool.length > 0) {
-          meal = this._findById(this._pool, id)
+          meal = this._findById(this._pool, id);
         } else {
           var mealRef = new Firebase(FIREBASE_URL + '/meals/' + id);
           meal = $firebaseObject(mealRef);
@@ -125,4 +127,4 @@ angular.module('mealPlannerApp')
         return deferred.promise;
       }
     };
-  });
+  }]);

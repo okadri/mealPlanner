@@ -8,7 +8,9 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('ShoppinglistCtrl', this.ShoppinglistCtrl = function ($scope, allItems, allMeals, mealService, shoppingListService) {
+  .controller('ShoppinglistCtrl',
+  ['$scope', 'allItems', 'allMeals', 'mealService', 'shoppingListService',
+  this.ShoppinglistCtrl = function ($scope, allItems, allMeals, mealService, shoppingListService) {
     $scope.allItems = allItems;
 
     $scope.searchIngredients = function(q) {
@@ -23,7 +25,7 @@ angular.module('mealPlannerApp')
     $scope.deleteItem = function(item) {
       shoppingListService.deleteItem(item);
     };
-  });
+  }]);
 
 ShoppinglistCtrl.getAllItems = function(shoppingListService) {
   return shoppingListService.getAll();

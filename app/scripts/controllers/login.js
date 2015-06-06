@@ -8,7 +8,9 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('LoginCtrl', function ($scope, $location, currentAuth) {
+  .controller('LoginCtrl',
+  ['$scope', '$location', 'currentAuth',
+  function ($scope, $location, currentAuth) {
     var ref = new Firebase(FIREBASE_URL);
 
     if (currentAuth) {
@@ -28,4 +30,4 @@ angular.module('mealPlannerApp')
         }
       });
     };
-  });
+  }]);
