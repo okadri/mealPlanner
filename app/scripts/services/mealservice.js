@@ -43,11 +43,14 @@ angular.module('mealPlannerApp')
       // Public methods
       getAll: function () {
         var deferred = $q.defer();
+        var scope = this;
 
         var ref = new Firebase(FIREBASE_URL + '/meals');
         this._pool = $firebaseArray(ref);
+        this._pool.$loaded(function(meals){
+          deferred.resolve(scope._pool);
+        });
 
-        deferred.resolve(this._pool);
         return deferred.promise;
       },
       getOneById: function (id) {
@@ -125,6 +128,43 @@ angular.module('mealPlannerApp')
 
         deferred.resolve(ingredients);
         return deferred.promise;
+      },
+      getSuggestions: function(allMeals, allPlans) {
+        var suggestions = [];
+        var num = 10
+        var rand, conflictingPlans;
+        var today = moment();
+        var dateWindow = moment();
+
+        while(allMeals.length > num && suggestions.length < num) {
+          rand = Math.floor(Math.random() * allMeals.length);
+
+          conflictingPlans = allPlans.filter(function(p) {
+            dateWindow.add(-allMeals[rand].frequency, 'week').format('YYYY-MM-DD');
+            if (p.start > dateWindow.format('YYYY-MM-DD')
+            && allMeals[rand].$id === p.mealId) {
+              return p;
+            }
+          });
+
+          if ( (
+            (suggestions.length === 0 && allPlans[allPlans.length-1].meal.meatId !== allMeals[rand].meatId)
+            ||
+            (suggestions.length > 0 && suggestions[suggestions.length-1].meal.meatId !== allMeals[rand].meatId)
+          ) && conflictingPlans.length === 0 ) {
+            if (!planService.findOneByDate(today)) {
+              suggestions.push(
+                planService.newPlan(
+                  allMeals[rand],
+                  today
+                )
+              );
+            }
+            today.add(1,'day');
+          }
+        }
+
+        return suggestions;
       }
     };
   }]);

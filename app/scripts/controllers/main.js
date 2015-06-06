@@ -9,8 +9,8 @@
  */
 angular.module('mealPlannerApp')
   .controller('MainCtrl',
-  ['$scope', 'Auth', '$location', '$modal', 'planService', 'mealService', 'allPlans',
-  this.MainCtrl = function ($scope, Auth, $location, $modal, planService, mealService, allPlans) {
+  ['$scope', 'Auth', '$location', '$modal', 'planService', 'mealService', 'allPlans', 'allMeals',
+  this.MainCtrl = function ($scope, Auth, $location, $modal, planService, mealService, allPlans, allMeals) {
 
     $scope.planSources = [
       {
@@ -20,7 +20,7 @@ angular.module('mealPlannerApp')
       },{
         color: '#d9edf7',
         textColor: '#333',
-        events: planService.getSuggestions()
+        events: mealService.getSuggestions(allMeals, allPlans)
       }
     ];
 
@@ -42,12 +42,7 @@ angular.module('mealPlannerApp')
   		});
 
   		modalInstance.result.then(function (meal) {
-        var toBeSaved = plan ? planService.getOneById(plan.$id) : {};
-
-        toBeSaved.title= meal.name;
-        toBeSaved.mealId = meal.$id;
-        toBeSaved.meal = meal;
-        toBeSaved.start = date.format();
+        var toBeSaved = planService.newPlan(meal, date, plan);
 
         planService.savePlan(toBeSaved);
   		});
@@ -102,4 +97,7 @@ angular.module('mealPlannerApp')
 
 MainCtrl.getAllPlans = function(planService) {
 	return planService.getAll();
+};
+MainCtrl.getAllMeals = function(mealService) {
+	return mealService.getAll();
 };

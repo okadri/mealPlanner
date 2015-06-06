@@ -45,6 +45,7 @@ mealPlannerApp.config(function ($routeProvider) {
         controller: 'MainCtrl',
     		resolve: {
     			allPlans: MainCtrl.getAllPlans,
+          allMeals: MainCtrl.getAllMeals,
           currentAuth: function(Auth) {
             return Auth.$requireAuth();
           }

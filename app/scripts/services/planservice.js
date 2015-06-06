@@ -42,12 +42,15 @@ angular.module('mealPlannerApp')
       // Public methods
       getAll: function () {
         var deferred = $q.defer();
+        var scope = this;
 
         var ref = new Firebase(FIREBASE_URL + '/plans');
         var query = ref.orderByChild("start").limitToLast(80);
         this._pool = $firebaseArray(query);
+        this._pool.$loaded(function(plans){
+          deferred.resolve(scope._pool);
+        });
 
-        deferred.resolve(this._pool);
         return deferred.promise;
       },
       getOneById: function (id) {
@@ -57,7 +60,7 @@ angular.module('mealPlannerApp')
         for(var el in this._pool) {
       		// hasOwnProperty ensures prototypes aren't considered
       		if(this._pool.hasOwnProperty(el)) {
-      			if(this._pool[el].start === date.format()) {
+      			if(this._pool[el].start === date.format('YYYY-MM-DD')) {
               return this._pool[el];
             }
       		}
@@ -84,9 +87,15 @@ angular.module('mealPlannerApp')
         var instance = this.getOneById(plan.$id);
         this._pool.$remove(instance);
       },
-      getSuggestions: function() {
-        // TODO
-        return [];
+      newPlan: function(meal,date, plan) {
+        var toBeSaved = plan ? this.getOneById(plan.$id) : {};
+
+        toBeSaved.title= meal.name;
+        toBeSaved.mealId = meal.$id;
+        toBeSaved.meal = meal;
+        toBeSaved.start = date.format('YYYY-MM-DD');
+
+        return toBeSaved;
       }
     };
   }]);
