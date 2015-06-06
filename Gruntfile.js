@@ -1,4 +1,4 @@
-// Generated on 2015-05-13 using generator-angular 0.11.1
+// Generated on 2015-04-18 using generator-angular 0.11.1
 'use strict';
 
 // # Globbing
@@ -221,7 +221,7 @@ module.exports = function (grunt) {
         flow: {
           html: {
             steps: {
-              js: ['concat'],
+              js: ['concat'],//, 'uglifyjs'],
               css: ['cssmin']
             },
             post: {}
@@ -338,7 +338,7 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
           src: [
-            '*.{ico,png,txt}',
+            '*.{ico,png,txt,swf,json}',
             '.htaccess',
             '*.html',
             'views/{,*/}*.html',
@@ -431,14 +431,14 @@ module.exports = function (grunt) {
     'copy:dist',
     'cdnify',
     'cssmin',
-    'uglify',
+    // 'uglify',
     'filerev',
     'usemin',
     'htmlmin'
   ]);
 
   grunt.registerTask('default', [
-    'newer:jshint',
+    // 'newer:jshint',
     'test',
     'build'
   ]);
