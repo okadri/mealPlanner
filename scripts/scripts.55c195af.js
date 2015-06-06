@@ -45,6 +45,7 @@ mealPlannerApp.config(function ($routeProvider) {
         controller: 'MainCtrl',
     		resolve: {
     			allPlans: MainCtrl.getAllPlans,
+          allMeals: MainCtrl.getAllMeals,
           currentAuth: function(Auth) {
             return Auth.$requireAuth();
           }
@@ -105,8 +106,8 @@ mealPlannerApp.config(function ($routeProvider) {
  */
 angular.module('mealPlannerApp')
   .controller('MainCtrl',
-  ['$scope', 'Auth', '$location', '$modal', 'planService', 'mealService', 'allPlans',
-  this.MainCtrl = function ($scope, Auth, $location, $modal, planService, mealService, allPlans) {
+  ['$scope', 'Auth', '$location', '$modal', 'planService', 'mealService', 'allPlans', 'allMeals',
+  this.MainCtrl = function ($scope, Auth, $location, $modal, planService, mealService, allPlans, allMeals) {
 
     $scope.planSources = [
       {
@@ -116,7 +117,7 @@ angular.module('mealPlannerApp')
       },{
         color: '#d9edf7',
         textColor: '#333',
-        events: planService.getSuggestions()
+        events: mealService.getSuggestions(allMeals, allPlans)
       }
     ];
 
@@ -138,12 +139,7 @@ angular.module('mealPlannerApp')
   		});
 
   		modalInstance.result.then(function (meal) {
-        var toBeSaved = plan ? planService.getOneById(plan.$id) : {};
-
-        toBeSaved.title= meal.name;
-        toBeSaved.mealId = meal.$id;
-        toBeSaved.meal = meal;
-        toBeSaved.start = date.format();
+        var toBeSaved = planService.newPlan(meal, date, plan);
 
         planService.savePlan(toBeSaved);
   		});
@@ -198,6 +194,9 @@ angular.module('mealPlannerApp')
 
 MainCtrl.getAllPlans = function(planService) {
 	return planService.getAll();
+};
+MainCtrl.getAllMeals = function(mealService) {
+	return mealService.getAll();
 };
 
 'use strict';
@@ -257,12 +256,15 @@ angular.module('mealPlannerApp')
       // Public methods
       getAll: function () {
         var deferred = $q.defer();
+        var scope = this;
 
         var ref = new Firebase(FIREBASE_URL + '/plans');
         var query = ref.orderByChild("start").limitToLast(80);
         this._pool = $firebaseArray(query);
+        this._pool.$loaded(function(plans){
+          deferred.resolve(scope._pool);
+        });
 
-        deferred.resolve(this._pool);
         return deferred.promise;
       },
       getOneById: function (id) {
@@ -272,7 +274,7 @@ angular.module('mealPlannerApp')
         for(var el in this._pool) {
       		// hasOwnProperty ensures prototypes aren't considered
       		if(this._pool.hasOwnProperty(el)) {
-      			if(this._pool[el].start === date.format()) {
+      			if(this._pool[el].start === date.format('YYYY-MM-DD')) {
               return this._pool[el];
             }
       		}
@@ -299,9 +301,15 @@ angular.module('mealPlannerApp')
         var instance = this.getOneById(plan.$id);
         this._pool.$remove(instance);
       },
-      getSuggestions: function() {
-        // TODO
-        return [];
+      newPlan: function(meal,date, plan) {
+        var toBeSaved = plan ? this.getOneById(plan.$id) : {};
+
+        toBeSaved.title= meal.name;
+        toBeSaved.mealId = meal.$id;
+        toBeSaved.meal = meal;
+        toBeSaved.start = date.format('YYYY-MM-DD');
+
+        return toBeSaved;
       }
     };
   }]);
@@ -351,11 +359,14 @@ angular.module('mealPlannerApp')
       // Public methods
       getAll: function () {
         var deferred = $q.defer();
+        var scope = this;
 
         var ref = new Firebase(FIREBASE_URL + '/meals');
         this._pool = $firebaseArray(ref);
+        this._pool.$loaded(function(meals){
+          deferred.resolve(scope._pool);
+        });
 
-        deferred.resolve(this._pool);
         return deferred.promise;
       },
       getOneById: function (id) {
@@ -433,6 +444,43 @@ angular.module('mealPlannerApp')
 
         deferred.resolve(ingredients);
         return deferred.promise;
+      },
+      getSuggestions: function(allMeals, allPlans) {
+        var suggestions = [];
+        var num = 10
+        var rand, conflictingPlans;
+        var today = moment();
+        var dateWindow = moment();
+
+        while(allMeals.length > num && suggestions.length < num) {
+          rand = Math.floor(Math.random() * allMeals.length);
+
+          conflictingPlans = allPlans.filter(function(p) {
+            dateWindow.add(-allMeals[rand].frequency, 'week').format('YYYY-MM-DD');
+            if (p.start > dateWindow.format('YYYY-MM-DD')
+            && allMeals[rand].$id === p.mealId) {
+              return p;
+            }
+          });
+
+          if ( (
+            (suggestions.length === 0 && allPlans[allPlans.length-1].meal.meatId !== allMeals[rand].meatId)
+            ||
+            (suggestions.length > 0 && suggestions[suggestions.length-1].meal.meatId !== allMeals[rand].meatId)
+          ) && conflictingPlans.length === 0 ) {
+            if (!planService.findOneByDate(today)) {
+              suggestions.push(
+                planService.newPlan(
+                  allMeals[rand],
+                  today
+                )
+              );
+            }
+            today.add(1,'day');
+          }
+        }
+
+        return suggestions;
       }
     };
   }]);
