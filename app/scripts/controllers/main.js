@@ -12,6 +12,8 @@ angular.module('mealPlannerApp')
   ['$scope', 'Auth', '$location', '$modal', 'planService', 'mealService', 'allPlans', 'allMeals',
   this.MainCtrl = function ($scope, Auth, $location, $modal, planService, mealService, allPlans, allMeals) {
 
+    $scope.suggestions = planService.getSuggestions(allMeals);
+
     $scope.planSources = [
       {
         color: '#dff0d8',
@@ -20,7 +22,7 @@ angular.module('mealPlannerApp')
       },{
         color: '#d9edf7',
         textColor: '#333',
-        events: mealService.getSuggestions(allMeals, allPlans)
+        events: $scope.suggestions
       }
     ];
 
@@ -89,7 +91,15 @@ angular.module('mealPlannerApp')
           }
         },
         eventClick: function( event, jsEvent, view ) {
-          $scope.startModal(event.start, event);
+          var plan = planService.findOneByDate(event.start);
+          if (plan) {
+            // It's a plan, bring up the modal to edit
+            $scope.startModal(event.start, event);
+          } else {
+            // It's a suggestion, confirm It
+            var toBeSaved = planService.newPlan(event.meal, event.start, event);
+            planService.savePlan(toBeSaved);
+          }
         }
       }
     };

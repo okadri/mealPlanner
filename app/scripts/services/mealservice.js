@@ -128,56 +128,6 @@ angular.module('mealPlannerApp')
 
         deferred.resolve(ingredients);
         return deferred.promise;
-      },
-      getSuggestions: function(allMeals, allPlans) {
-        var suggestions = [];
-        var num = 10
-        var rand, conflictingPlans;
-        var today = moment();
-        var dateWindow = moment();
-
-        while(allMeals.length > num && suggestions.length < num) {
-          rand = Math.floor(Math.random() * allMeals.length);
-          dateWindow = moment();
-          var foundConflict = false;
-
-          angular.forEach(allPlans, function(p) {
-            dateWindow = moment();
-            dateWindow.add(
-              suggestions.length - allMeals[rand].frequency
-              , 'week'
-              ).format('YYYY-MM-DD');
-
-            if (p.start > dateWindow.format('YYYY-MM-DD')
-            && allMeals[rand].$id === p.mealId) {
-              foundConflict = true;
-            }
-          });
-
-          angular.forEach(suggestions, function(p) {
-            if (allMeals[rand].$id === p.mealId) {
-              foundConflict = true;
-            }
-          });
-
-          if ( (
-            (suggestions.length === 0 && allPlans[allPlans.length-1].meal.meatId !== allMeals[rand].meatId)
-            ||
-            (suggestions.length > 0 && suggestions[suggestions.length-1].meal.meatId !== allMeals[rand].meatId)
-          ) && !foundConflict ) {
-            if (!planService.findOneByDate(today)) {
-              suggestions.push(
-                planService.newPlan(
-                  allMeals[rand],
-                  today
-                )
-              );
-            }
-            today.add(1,'day');
-          }
-        }
-
-        return suggestions;
       }
     };
   }]);

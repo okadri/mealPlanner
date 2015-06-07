@@ -88,7 +88,7 @@ angular.module('mealPlannerApp')
         this._pool.$remove(instance);
       },
       newPlan: function(meal,date, plan) {
-        var toBeSaved = plan ? this.getOneById(plan.$id) : {};
+        var toBeSaved = (plan && plan.$id) ? this.getOneById(plan.$id) : {};
 
         toBeSaved.title= meal.name;
         toBeSaved.mealId = meal.$id;
@@ -96,6 +96,57 @@ angular.module('mealPlannerApp')
         toBeSaved.start = date.format('YYYY-MM-DD');
 
         return toBeSaved;
+      },
+      getSuggestions: function(allMeals) {
+        var suggestions = [];
+        var num = 10
+        var rand, conflictingPlans;
+        var today = moment();
+        var dateWindow = moment();
+        var scope = this;
+
+        while(allMeals.length > num && suggestions.length < num) {
+          rand = Math.floor(Math.random() * allMeals.length);
+          dateWindow = moment();
+          var foundConflict = false;
+
+          angular.forEach(this._pool, function(p) {
+            dateWindow = moment();
+            dateWindow.add(
+              suggestions.length - allMeals[rand].frequency
+              , 'week'
+              ).format('YYYY-MM-DD');
+
+            if (p.start > dateWindow.format('YYYY-MM-DD')
+            && allMeals[rand].$id === p.mealId) {
+              foundConflict = true;
+            }
+          });
+
+          angular.forEach(suggestions, function(p) {
+            if (allMeals[rand].$id === p.mealId) {
+              foundConflict = true;
+            }
+          });
+
+          if ( (
+            (suggestions.length === 0 && this._pool[this._pool.length-1].meal.meatId !== allMeals[rand].meatId)
+            ||
+            (suggestions.length > 0 && suggestions[suggestions.length-1].meal.meatId !== allMeals[rand].meatId)
+          ) && !foundConflict ) {
+            if (!scope.findOneByDate(today)) {
+              suggestions.push(
+                scope.newPlan(
+                  allMeals[rand],
+                  today
+                )
+              );
+            }
+            today.add(1,'day');
+          }
+        }
+
+        return suggestions;
       }
     };
   }]);
