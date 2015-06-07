@@ -109,6 +109,11 @@ angular.module('mealPlannerApp')
   ['$scope', 'Auth', '$location', '$modal', 'planService', 'mealService', 'allPlans', 'allMeals',
   this.MainCtrl = function ($scope, Auth, $location, $modal, planService, mealService, allPlans, allMeals) {
 
+    $scope.getSuggestions = function() {
+      $scope.suggestions = planService.getSuggestions(allMeals);
+    }
+    $scope.getSuggestions();
+
     $scope.planSources = [
       {
         color: '#dff0d8',
@@ -117,7 +122,7 @@ angular.module('mealPlannerApp')
       },{
         color: '#d9edf7',
         textColor: '#333',
-        events: mealService.getSuggestions(allMeals, allPlans)
+        events: $scope.suggestions
       }
     ];
 
@@ -165,7 +170,7 @@ angular.module('mealPlannerApp')
     $scope.uiConfig = {
       calendar:{
         height: 450,
-        editable: true,
+        editable: false,
         selectable: true,
         timezone: 'local',
         header:{
@@ -186,7 +191,15 @@ angular.module('mealPlannerApp')
           }
         },
         eventClick: function( event, jsEvent, view ) {
-          $scope.startModal(event.start, event);
+          var plan = planService.findOneByDate(event.start);
+          if (plan) {
+            // It's a plan, bring up the modal to edit
+            $scope.startModal(event.start, event);
+          } else {
+            // It's a suggestion, confirm It
+            var toBeSaved = planService.newPlan(event.meal, event.start, event);
+            planService.savePlan(toBeSaved);
+          }
         }
       }
     };
@@ -240,6 +253,7 @@ angular.module('mealPlannerApp')
   function ($q, $firebaseArray, Plan) {
     return {
       _pool: null,
+      _suggestions: [],
       _findById: function(arr, id) {
       	for(var el in arr) {
       		// hasOwnProperty ensures prototypes aren't considered
@@ -286,13 +300,13 @@ angular.module('mealPlannerApp')
         var deferred = $q.defer();
         var savedPlan;
 
-        plan.stick = true
-
         if (plan.$id) {
           savedPlan = this._pool.$save(plan);
         } else {
           savedPlan = this._pool.$add(plan);
         }
+
+        this.deleteSuggestionByDate(moment(plan.start));
 
         deferred.resolve(this._pool);
         return deferred.promise;
@@ -302,14 +316,78 @@ angular.module('mealPlannerApp')
         this._pool.$remove(instance);
       },
       newPlan: function(meal,date, plan) {
-        var toBeSaved = plan ? this.getOneById(plan.$id) : {};
+        var toBeSaved = (plan && plan.$id) ? this.getOneById(plan.$id) : {};
 
         toBeSaved.title= meal.name;
         toBeSaved.mealId = meal.$id;
         toBeSaved.meal = meal;
         toBeSaved.start = date.format('YYYY-MM-DD');
+        toBeSaved.stick = true
 
         return toBeSaved;
+      },
+      deleteSuggestionByDate: function (date) {
+        for(var el in this._suggestions) {
+      		// hasOwnProperty ensures prototypes aren't considered
+      		if(this._suggestions.hasOwnProperty(el)) {
+      			if(this._suggestions[el].start === date.format('YYYY-MM-DD')) {
+              this._suggestions.splice(el,1);
+            }
+      		}
+      	}
+
+      	return undefined;
+      },
+      getSuggestions: function(allMeals) {
+        var num = 10
+        var rand, conflictingPlans;
+        var today = moment();
+        var dateWindow = moment();
+        var scope = this;
+
+        scope._suggestions.length = 0;
+        while(allMeals.length > num && scope._suggestions.length < num) {
+          rand = Math.floor(Math.random() * allMeals.length);
+          dateWindow = moment();
+          var foundConflict = false;
+
+          angular.forEach(this._pool, function(p) {
+            dateWindow = moment();
+            dateWindow.add(
+              scope._suggestions.length - allMeals[rand].frequency
+              , 'week'
+              ).format('YYYY-MM-DD');
+
+            if (p.start > dateWindow.format('YYYY-MM-DD')
+            && allMeals[rand].$id === p.mealId) {
+              foundConflict = true;
+            }
+          });
+
+          angular.forEach(scope._suggestions, function(p) {
+            if (allMeals[rand].$id === p.mealId) {
+              foundConflict = true;
+            }
+          });
+
+          if ( (
+            (scope._suggestions.length === 0 && this._pool[this._pool.length-1].meal.meatId !== allMeals[rand].meatId)
+            ||
+            (scope._suggestions.length > 0 && scope._suggestions[scope._suggestions.length-1].meal.meatId !== allMeals[rand].meatId)
+          ) && !foundConflict ) {
+            if (!scope.findOneByDate(today)) {
+              scope._suggestions.push(
+                scope.newPlan(
+                  allMeals[rand],
+                  today
+                )
+              );
+            }
+            today.add(1,'day');
+          }
+        }
+
+        return scope._suggestions;
       }
     };
   }]);
@@ -444,43 +522,6 @@ angular.module('mealPlannerApp')
 
         deferred.resolve(ingredients);
         return deferred.promise;
-      },
-      getSuggestions: function(allMeals, allPlans) {
-        var suggestions = [];
-        var num = 10
-        var rand, conflictingPlans;
-        var today = moment();
-        var dateWindow = moment();
-
-        while(allMeals.length > num && suggestions.length < num) {
-          rand = Math.floor(Math.random() * allMeals.length);
-
-          conflictingPlans = allPlans.filter(function(p) {
-            dateWindow.add(-allMeals[rand].frequency, 'week').format('YYYY-MM-DD');
-            if (p.start > dateWindow.format('YYYY-MM-DD')
-            && allMeals[rand].$id === p.mealId) {
-              return p;
-            }
-          });
-
-          if ( (
-            (suggestions.length === 0 && allPlans[allPlans.length-1].meal.meatId !== allMeals[rand].meatId)
-            ||
-            (suggestions.length > 0 && suggestions[suggestions.length-1].meal.meatId !== allMeals[rand].meatId)
-          ) && conflictingPlans.length === 0 ) {
-            if (!planService.findOneByDate(today)) {
-              suggestions.push(
-                planService.newPlan(
-                  allMeals[rand],
-                  today
-                )
-              );
-            }
-            today.add(1,'day');
-          }
-        }
-
-        return suggestions;
       }
     };
   }]);
@@ -497,11 +538,21 @@ angular.module('mealPlannerApp')
 angular.module('mealPlannerApp')
   .controller('EditplanCtrl',
   ['$scope', '$modalInstance', 'mealService', 'planService', 'mealId', 'plan', 'allMeals',
-  this.EditplanCtrl = function ($scope, $modalInstance, mealService, planService, mealId, plan, allMeals) {
+  this.EditplanCtrl = function ($scope, $modalInstance, mealService, planService, mealId, plan, allMeals, meatTypeService) {
     $scope.allMeals = allMeals;
     $scope.mealId = mealId;
+    $scope.meatTypes = meatTypeService.getAll();
 
     $scope.meal = mealService.getOneById(mealId)
+
+    $scope.filterMeatType = function(meatId) {
+      meatId = meatId.toString();
+      if ($scope.selectedMeatType.meatId === meatId) {
+        $scope.selectedMeatType = {};
+      } else {
+        $scope.selectedMeatType.meatId = meatId;
+      }
+    };
 
     $scope.setMeal = function() {
       $modalInstance.close($scope.meal);
