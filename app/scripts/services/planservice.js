@@ -26,6 +26,7 @@ angular.module('mealPlannerApp')
   function ($q, $firebaseArray, Plan) {
     return {
       _pool: null,
+      _suggestions: [],
       _findById: function(arr, id) {
       	for(var el in arr) {
       		// hasOwnProperty ensures prototypes aren't considered
@@ -80,6 +81,8 @@ angular.module('mealPlannerApp')
           savedPlan = this._pool.$add(plan);
         }
 
+        this.deleteSuggestionByDate(moment(plan.start));
+
         deferred.resolve(this._pool);
         return deferred.promise;
       },
@@ -97,15 +100,26 @@ angular.module('mealPlannerApp')
 
         return toBeSaved;
       },
+      deleteSuggestionByDate: function (date) {
+        for(var el in this._suggestions) {
+      		// hasOwnProperty ensures prototypes aren't considered
+      		if(this._suggestions.hasOwnProperty(el)) {
+      			if(this._suggestions[el].start === date.format('YYYY-MM-DD')) {
+              this._suggestions.splice(el,1);
+            }
+      		}
+      	}
+
+      	return undefined;
+      },
       getSuggestions: function(allMeals) {
-        var suggestions = [];
         var num = 10
         var rand, conflictingPlans;
         var today = moment();
         var dateWindow = moment();
         var scope = this;
 
-        while(allMeals.length > num && suggestions.length < num) {
+        while(allMeals.length > num && scope._suggestions.length < num) {
           rand = Math.floor(Math.random() * allMeals.length);
           dateWindow = moment();
           var foundConflict = false;
@@ -113,7 +127,7 @@ angular.module('mealPlannerApp')
           angular.forEach(this._pool, function(p) {
             dateWindow = moment();
             dateWindow.add(
-              suggestions.length - allMeals[rand].frequency
+              scope._suggestions.length - allMeals[rand].frequency
               , 'week'
               ).format('YYYY-MM-DD');
 
@@ -123,19 +137,19 @@ angular.module('mealPlannerApp')
             }
           });
 
-          angular.forEach(suggestions, function(p) {
+          angular.forEach(scope._suggestions, function(p) {
             if (allMeals[rand].$id === p.mealId) {
               foundConflict = true;
             }
           });
 
           if ( (
-            (suggestions.length === 0 && this._pool[this._pool.length-1].meal.meatId !== allMeals[rand].meatId)
+            (scope._suggestions.length === 0 && this._pool[this._pool.length-1].meal.meatId !== allMeals[rand].meatId)
             ||
-            (suggestions.length > 0 && suggestions[suggestions.length-1].meal.meatId !== allMeals[rand].meatId)
+            (scope._suggestions.length > 0 && scope._suggestions[scope._suggestions.length-1].meal.meatId !== allMeals[rand].meatId)
           ) && !foundConflict ) {
             if (!scope.findOneByDate(today)) {
-              suggestions.push(
+              scope._suggestions.push(
                 scope.newPlan(
                   allMeals[rand],
                   today
@@ -146,7 +160,7 @@ angular.module('mealPlannerApp')
           }
         }
 
-        return suggestions;
+        return scope._suggestions;
       }
     };
   }]);
