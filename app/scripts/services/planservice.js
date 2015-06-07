@@ -73,8 +73,6 @@ angular.module('mealPlannerApp')
         var deferred = $q.defer();
         var savedPlan;
 
-        plan.stick = true
-
         if (plan.$id) {
           savedPlan = this._pool.$save(plan);
         } else {
@@ -97,6 +95,7 @@ angular.module('mealPlannerApp')
         toBeSaved.mealId = meal.$id;
         toBeSaved.meal = meal;
         toBeSaved.start = date.format('YYYY-MM-DD');
+        toBeSaved.stick = true
 
         return toBeSaved;
       },
@@ -119,6 +118,7 @@ angular.module('mealPlannerApp')
         var dateWindow = moment();
         var scope = this;
 
+        scope._suggestions.length = 0;
         while(allMeals.length > num && scope._suggestions.length < num) {
           rand = Math.floor(Math.random() * allMeals.length);
           dateWindow = moment();

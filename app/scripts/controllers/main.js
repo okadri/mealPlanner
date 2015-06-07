@@ -12,7 +12,10 @@ angular.module('mealPlannerApp')
   ['$scope', 'Auth', '$location', '$modal', 'planService', 'mealService', 'allPlans', 'allMeals',
   this.MainCtrl = function ($scope, Auth, $location, $modal, planService, mealService, allPlans, allMeals) {
 
-    $scope.suggestions = planService.getSuggestions(allMeals);
+    $scope.getSuggestions = function() {
+      $scope.suggestions = planService.getSuggestions(allMeals);
+    }
+    $scope.getSuggestions();
 
     $scope.planSources = [
       {
@@ -70,7 +73,7 @@ angular.module('mealPlannerApp')
     $scope.uiConfig = {
       calendar:{
         height: 450,
-        editable: true,
+        editable: false,
         selectable: true,
         timezone: 'local',
         header:{
