@@ -18,6 +18,7 @@ angular.module('mealPlannerApp')
     };
 
     $scope.addItem = function(item) {
+      item = item.charAt(0).toUpperCase() + item.slice(1);
       shoppingListService.addItem(item);
       $scope.newItem = '';
     };

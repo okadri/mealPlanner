@@ -1,7 +1,7 @@
 <input type="text" ng-model="newItem" placeholder="Add Item"
   typeahead-on-select="addItem($item, $model, $label)"
   typeahead="ingredient for ingredient in searchIngredients($viewValue)"
-  class="form-control" autofocus>
+  class="form-control" on-enter="addItem(newItem)" autofocus>
   {{allMeals}}
 <hr />
 <div class="list-group">
