@@ -124,6 +124,7 @@ angular.module('mealPlannerApp')
           dateWindow = moment();
           var foundConflict = false;
 
+          // Check if the current confirmed plans have conflicts
           angular.forEach(this._pool, function(p) {
             dateWindow = moment();
             dateWindow.add(
@@ -137,17 +138,30 @@ angular.module('mealPlannerApp')
             }
           });
 
+          // Check if the current suggestions have conflicts
           angular.forEach(scope._suggestions, function(p) {
             if (allMeals[rand].$id === p.mealId) {
               foundConflict = true;
             }
           });
 
+          // Check if with the meal season
+          var withinSeason = (
+                allMeals[rand].seasonal
+            &&  allMeals[rand].startDate <= today.month()
+            &&  allMeals[rand].endDate >= today.month()
+          );
+
           if ( (
-            (scope._suggestions.length === 0 && this._pool[this._pool.length-1].meal.meatId !== allMeals[rand].meatId)
-            ||
-            (scope._suggestions.length > 0 && scope._suggestions[scope._suggestions.length-1].meal.meatId !== allMeals[rand].meatId)
-          ) && !foundConflict ) {
+            // First suggestion? Make sure meat is different from last plan
+            ( !foundConflict && withinSeason &&
+              scope._suggestions.length === 0
+              && this._pool[this._pool.length-1].meal.meatId !== allMeals[rand].meatId)
+              ||
+                // Other suggestions? Make sure meat is different from previous suggestion
+                (scope._suggestions.length > 0
+                && scope._suggestions[scope._suggestions.length-1].meal.meatId !== allMeals[rand].meatId)
+              )) {
             if (!scope.findOneByDate(today)) {
               scope._suggestions.push(
                 scope.newPlan(
