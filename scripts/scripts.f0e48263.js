@@ -373,7 +373,7 @@ angular.module('mealPlannerApp')
           });
 
           // Check if with the meal season
-          var withinSeason = (
+          var withinSeason = !allMeals[rand].seasonal || (
                 allMeals[rand].seasonal
             &&  allMeals[rand].startDate <= today.month()
             &&  allMeals[rand].endDate >= today.month()
