@@ -125,44 +125,56 @@ angular.module('mealPlannerApp')
           var foundConflict = false;
 
           // Check if the current confirmed plans have conflicts
-          angular.forEach(this._pool, function(p) {
+          var p;
+          for (var i = 0; i < this._pool.length; i++) {
+            p = this._pool[i]
             dateWindow = moment();
             dateWindow.add(
-              scope._suggestions.length - allMeals[rand].frequency
-              , 'week'
+              scope._suggestions.length - (allMeals[rand].frequency * 7)
+              , 'day'
               ).format('YYYY-MM-DD');
-
             if (p.start > dateWindow.format('YYYY-MM-DD')
             && allMeals[rand].$id === p.mealId) {
               foundConflict = true;
+              console.log('%c' + p.meal.name + ' has a conflict in confirmed plans', 'color: #00688B');
+              break;
             }
-          });
+          }
 
           // Check if the current suggestions have conflicts
-          angular.forEach(scope._suggestions, function(p) {
+          for (var i = 0; i < this._suggestions.length; i++) {
+            p = this._suggestions[i]
             if (allMeals[rand].$id === p.mealId) {
               foundConflict = true;
+              console.log('%c' + p.meal.name + ' has a conflict in suggestions', 'color: #E59400');
+              break;
             }
-          });
+          }
 
           // Check if with the meal season
-          var withinSeason = !allMeals[rand].seasonal || (
+          var isWithinSeason = !allMeals[rand].seasonal || (
                 allMeals[rand].seasonal
             &&  allMeals[rand].startDate <= today.month()
             &&  allMeals[rand].endDate >= today.month()
           );
+          if (!isWithinSeason) console.log('%c' + allMeals[rand].name + ' is not within season', 'color: #FFA500');
 
-          if ( (
-            // First suggestion? Make sure meat is different from last plan
-            ( !foundConflict && withinSeason &&
+          // Check if it has a different meat type
+          var isDifferentMeat = (
+            ( // First suggestion? Make sure meat is different from last plan
               scope._suggestions.length === 0
               && this._pool[this._pool.length-1].meal.meatId !== allMeals[rand].meatId)
               ||
-                // Other suggestions? Make sure meat is different from previous suggestion
-                (scope._suggestions.length > 0
-                && scope._suggestions[scope._suggestions.length-1].meal.meatId !== allMeals[rand].meatId)
-              )) {
+            ( // Other suggestions? Make sure meat is different from previous suggestion
+              scope._suggestions.length > 0
+              && scope._suggestions[scope._suggestions.length-1].meal.meatId !== allMeals[rand].meatId)
+          );
+          if (!isDifferentMeat) console.log('%c' + allMeals[rand].name + ' has the same meat type', 'color: #663300');
+
+          // If all is good, push to suggestions
+          if ( !foundConflict && isWithinSeason && isDifferentMeat) {
             if (!scope.findOneByDate(today)) {
+              console.log('%c' + allMeals[rand].name + ' is added to suggestions!', 'color: #BADA55');
               scope._suggestions.push(
                 scope.newPlan(
                   allMeals[rand],
