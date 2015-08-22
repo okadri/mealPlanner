@@ -32,7 +32,9 @@ mealPlannerApp.factory('Auth', function ($firebaseAuth) {
 //redirects to homepage if $requireAuth rejects
 mealPlannerApp.run(["$rootScope", "$location", function($rootScope, $location) {
   $rootScope.$on("$routeChangeError", function(event, next, previous, error) {
+    console.log("routeChangeError", error);
     if (error === "AUTH_REQUIRED") {
+      console.log("Auth required, redirecting to login page");
       $location.path("/login");
     }
   });
