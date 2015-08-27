@@ -14,7 +14,6 @@ angular.module('mealPlannerApp')
 
     $scope.getSuggestions = function() {
       $scope.suggestions = planService.getSuggestions(allMeals);
-      $scope.$digest();
     }
     $scope.getSuggestions();
 
