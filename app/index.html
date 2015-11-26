@@ -47,14 +47,15 @@
                 <a ng-href="#/meals">Meals</a></li>
               <li ng-class="{'active': isActive('/shoppingList')}">
                 <a ng-href="#/shoppingList">Shopping List</a></li>
+              <li><a ng-click="logout()">Logout</a></li>
             </ul>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="container">
-    <div ng-view=""></div>
+    <div class="container ng-cloak" ng-cloak>
+      <div ng-view=""></div>
     </div>
 
     <div class="footer">
