@@ -23,12 +23,6 @@ window.mealPlannerApp = angular
     'ngTagsInput'
   ]);
 
-//Generates the $firebaseAuth instance
-mealPlannerApp.factory('Auth', function ($firebaseAuth) {
-  var ref = new Firebase(FIREBASE_URL);
-  return $firebaseAuth(ref);
-});
-
 //redirects to homepage if $requireAuth rejects
 mealPlannerApp.run(["$rootScope", "$location", function($rootScope, $location) {
   $rootScope.$on("$routeChangeError", function(event, next, previous, error) {
@@ -685,7 +679,12 @@ angular.module('mealPlannerApp')
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('NavCtrl', ['$scope', '$location', function ($scope, $location) {
+  .controller('NavCtrl', ['$scope', '$location', 'Auth', function ($scope, $location, Auth) {
+    $scope.logout = function() {
+      Auth.$unauth();
+      $location.path('/login');
+    };
+
     $scope.isActive = function (viewLocation) {
         return viewLocation === $location.path();
     };
@@ -1041,4 +1040,19 @@ angular.module('mealPlannerApp')
         });
       }
     };
+  });
+
+'use strict';
+
+/**
+ * @ngdoc service
+ * @name mealPlannerApp.Auth
+ * @description
+ * # Auth
+ * Factory in the mealPlannerApp.
+ */
+angular.module('mealPlannerApp')
+  .factory('Auth', function ($firebaseAuth) {
+    var ref = new Firebase(FIREBASE_URL);
+    return $firebaseAuth(ref);
   });
