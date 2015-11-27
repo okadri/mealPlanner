@@ -1,1 +1,13 @@
-<input type="text" ng-model="newItem" placeholder="Add Item" typeahead-on-select="addItem($item, $model, $label)" typeahead="ingredient for ingredient in searchIngredients($viewValue)" class="form-control" on-enter="addItem(newItem)" autofocus> {{allMeals}} <hr> <div class="list-group"> <a ng-repeat="item in allItems | orderBy: '$value'" class="list-group-item clickable">{{ item.$value }} <i class="glyphicon glyphicon-check close" ng-click="deleteItem(item)"></i> </a> </div>
+<input type="text" ng-model="newItem" placeholder="Add Item"
+  typeahead-on-select="addItem($item, $model, $label)"
+  typeahead="ingredient for ingredient in searchIngredients($viewValue)"
+  class="form-control" on-enter="addItem(newItem)" autofocus>
+  {{allMeals}}
+<hr />
+<div class="list-group">
+  <a ng-repeat="item in allItems | orderBy: '$value'"
+  class="list-group-item clickable">{{ item.$value }}
+    <i class="glyphicon glyphicon-check close"
+      ng-click="deleteItem(item)"></i>
+  </a>
+</div>
