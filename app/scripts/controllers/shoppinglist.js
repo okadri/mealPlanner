@@ -26,11 +26,13 @@ angular.module('mealPlannerApp')
     $scope.deleteItem = function(item) {
       shoppingListService.deleteItem(item);
     };
-  }]);
+  }
+]);
 
-ShoppinglistCtrl.getAllItems = function(shoppingListService) {
+ShoppinglistCtrl.getAllItems = ["shoppingListService", function(shoppingListService) {
   return shoppingListService.getAll();
-};
-ShoppinglistCtrl.getAllMeals = function(mealService) {
+}];
+
+ShoppinglistCtrl.getAllMeals = ["mealService", function(mealService) {
 	return mealService.getAll();
-};
+}];

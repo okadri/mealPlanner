@@ -27,4 +27,5 @@ angular.module('mealPlannerApp')
     $scope.queryIngredients = function(q) {
       return mealService.searchIngredients(q);
     }
-  }]);
+  }
+]);

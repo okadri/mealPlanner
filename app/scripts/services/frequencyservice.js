@@ -8,7 +8,7 @@
  * Factory in the mealPlannerApp.
  */
 angular.module('mealPlannerApp')
-  .factory('frequencyService', function () {
+  .factory('frequencyService', [ function () {
     return {
       _pool: [
         { numOfWks: 1, description: '1 Week' },
@@ -32,4 +32,5 @@ angular.module('mealPlannerApp')
         return null;
       }
     };
-  });
+  }
+]);

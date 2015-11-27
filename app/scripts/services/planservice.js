@@ -8,7 +8,7 @@
  * Factory in the mealPlannerApp.
  */
 angular.module('mealPlannerApp')
-  .factory('Plan', function() {
+  .factory('Plan', [ function() {
   	function Plan(planData) {
   		if (planData) {
   			this.setData(planData);
@@ -20,7 +20,7 @@ angular.module('mealPlannerApp')
   			}
   	};
   	return Plan;
-  })
+  }])
   .factory('planService',
   ['$q', '$firebaseArray', 'Plan',
   function ($q, $firebaseArray, Plan) {
@@ -189,4 +189,5 @@ angular.module('mealPlannerApp')
         return scope._suggestions;
       }
     };
-  }]);
+  }
+]);

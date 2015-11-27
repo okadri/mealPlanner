@@ -36,4 +36,5 @@ angular.module('mealPlannerApp')
         $scope.$apply();
       });
     };
-  }]);
+  }
+]);

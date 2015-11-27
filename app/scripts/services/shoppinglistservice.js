@@ -65,4 +65,5 @@ angular.module('mealPlannerApp')
         this._pool.$remove(instance);
       }
     };
-  }]);
+  }
+]);

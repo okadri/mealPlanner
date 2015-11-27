@@ -28,6 +28,6 @@ angular.module('mealPlannerApp')
       $scope.ingredients.splice(index, 1);
     };
   }]);
-AddingredientsCtrl.getAllItems = function(shoppingListService) {
+AddingredientsCtrl.getAllItems = ["shoppingListService", function(shoppingListService) {
   return shoppingListService.getAll();
-};
+}];

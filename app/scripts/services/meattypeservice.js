@@ -8,7 +8,7 @@
  * Factory in the mealPlannerApp.
  */
 angular.module('mealPlannerApp')
-  .factory('meatTypeService', function () {
+  .factory('meatTypeService', [ function () {
     return {
       _pool: [
         { id: 0, name: 'vegetarien' },
@@ -30,4 +30,5 @@ angular.module('mealPlannerApp')
         return null;
       }
     };
-  });
+  }
+]);

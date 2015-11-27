@@ -35,8 +35,9 @@ angular.module('mealPlannerApp')
     $scope.deleteMeal = function(meal) {
       mealService.deleteMeal(meal);
     };
-  }]);
+  }
+]);
 
-MealsCtrl.getAllMeals = function(mealService) {
+MealsCtrl.getAllMeals = ["mealService", function(mealService) {
 	return mealService.getAll();
-};
+}];

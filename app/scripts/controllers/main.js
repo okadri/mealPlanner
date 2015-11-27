@@ -106,11 +106,13 @@ angular.module('mealPlannerApp')
         }
       }
     };
-  }]);
+  }
+]);
 
-MainCtrl.getAllPlans = function(planService) {
+MainCtrl.getAllPlans = ["planService", function(planService) {
 	return planService.getAll();
-};
-MainCtrl.getAllMeals = function(mealService) {
+}];
+
+MainCtrl.getAllMeals = ["mealService", function(mealService) {
 	return mealService.getAll();
-};
+}];

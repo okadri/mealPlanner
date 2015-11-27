@@ -8,7 +8,9 @@
  * Controller of the mealPlannerApp
  */
 angular.module('mealPlannerApp')
-  .controller('NavCtrl', ['$scope', '$location', 'Auth', function ($scope, $location, Auth) {
+  .controller('NavCtrl',
+  ['$scope', '$location', 'Auth',
+  function ($scope, $location, Auth) {
     $scope.logout = function() {
       Auth.$unauth();
       $location.path('/login');
@@ -17,4 +19,5 @@ angular.module('mealPlannerApp')
     $scope.isActive = function (viewLocation) {
         return viewLocation === $location.path();
     };
-  }]);
+  }
+]);

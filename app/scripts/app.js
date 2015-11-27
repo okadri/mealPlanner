@@ -24,10 +24,11 @@ window.mealPlannerApp = angular
   ]);
 
 //Generates the $firebaseAuth instance
-mealPlannerApp.factory('Auth', function ($firebaseAuth) {
-  var ref = new Firebase(FIREBASE_URL);
-  return $firebaseAuth(ref);
-});
+mealPlannerApp.factory("Auth", ["$firebaseAuth", function($firebaseAuth) {
+    var ref = new Firebase(FIREBASE_URL);
+    return $firebaseAuth(ref);
+  }
+]);
 
 //redirects to homepage if $requireAuth rejects
 mealPlannerApp.run(["$rootScope", "$location", function($rootScope, $location) {
@@ -40,7 +41,7 @@ mealPlannerApp.run(["$rootScope", "$location", function($rootScope, $location) {
   });
 }]);
 
-mealPlannerApp.config(function ($routeProvider) {
+mealPlannerApp.config(["$routeProvider", function($routeProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
@@ -48,9 +49,9 @@ mealPlannerApp.config(function ($routeProvider) {
     		resolve: {
     			allPlans: MainCtrl.getAllPlans,
           allMeals: MainCtrl.getAllMeals,
-          currentAuth: function(Auth) {
+          currentAuth: ["Auth", function(Auth) {
             return Auth.$requireAuth();
-          }
+          }]
     		}
       })
       .when('/meals', {
@@ -58,18 +59,18 @@ mealPlannerApp.config(function ($routeProvider) {
         controller: 'MealsCtrl',
         resolve: {
     			allMeals: MealsCtrl.getAllMeals,
-          currentAuth: function(Auth) {
+          currentAuth: ["Auth", function(Auth) {
             return Auth.$requireAuth();
-          }
+          }]
     		}
       })
       .when('/meals/:id', {
         templateUrl: 'views/editmeal.html',
         controller: 'EditmealCtrl',
         resolve: {
-          currentAuth: function(Auth) {
+          currentAuth: ["Auth", function(Auth) {
             return Auth.$requireAuth();
-          }
+          }]
     		}
       })
       .when('/shoppingList', {
@@ -78,21 +79,22 @@ mealPlannerApp.config(function ($routeProvider) {
         resolve: {
           allMeals: ShoppinglistCtrl.getAllMeals,
     			allItems: ShoppinglistCtrl.getAllItems,
-          currentAuth: function(Auth) {
+          currentAuth: ["Auth", function(Auth) {
             return Auth.$requireAuth();
-          }
+          }]
     		}
       })
       .when('/login', {
         templateUrl: 'views/login.html',
         controller: 'LoginCtrl',
         resolve: {
-          currentAuth: function(Auth) {
+          currentAuth: ["Auth", function(Auth) {
             return Auth.$waitForAuth();
-          }
+          }]
         }
       })
       .otherwise({
         redirectTo: '/'
       });
-  });
+  }
+]);

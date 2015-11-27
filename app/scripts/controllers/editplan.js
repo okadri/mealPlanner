@@ -9,7 +9,7 @@
  */
 angular.module('mealPlannerApp')
   .controller('EditplanCtrl',
-  ['$scope', '$modalInstance', 'mealService', 'planService', 'mealId', 'plan', 'allMeals',
+  ['$scope', '$modalInstance', 'mealService', 'planService', 'mealId', 'plan', 'allMeals', 'meatTypeService',
   this.EditplanCtrl = function ($scope, $modalInstance, mealService, planService, mealId, plan, allMeals, meatTypeService) {
     $scope.allMeals = allMeals;
     $scope.mealId = mealId;
@@ -39,8 +39,9 @@ angular.module('mealPlannerApp')
       $modalInstance.dismiss('cancel');
     };
 
-  }]);
+  }
+]);
 
-EditplanCtrl.getAllMeals = function(mealService) {
+EditplanCtrl.getAllMeals = ["mealService", function(mealService) {
 	return mealService.getAll();
-};
+}];
