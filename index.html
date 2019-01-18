@@ -1,9 +1,19 @@
-<!doctype html> <html class="no-js"> <head> <meta charset="utf-8"> <title></title> <meta name="description" content=""> <meta name="viewport" content="width=device-width"> <!-- Place favicon.ico and apple-touch-icon.png in the root directory --> <link rel="stylesheet" href="styles/vendor.d4e10cee.css"> <link rel="stylesheet" href="styles/main.55d0017b.css">  <body ng-app="mealPlannerApp"> <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]--> <!-- Add your site or application content here --> <div class="header"> <div class="navbar navbar-default" role="navigation"> <div class="container"> <div class="navbar-header"> <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button> <a class="navbar-brand" href="#/">Meal Planner</a> </div> <div class="collapse navbar-collapse" id="js-navbar-collapse"> <ul class="nav navbar-nav" ng-controller="NavCtrl"> <li ng-class="{'active': isActive('/')}"> <a href="#/">Plan</a></li> <li ng-class="{'active': isActive('/meals')}"> <a ng-href="#/meals">Meals</a></li> <li ng-class="{'active': isActive('/shoppingList')}"> <a ng-href="#/shoppingList">Shopping List</a></li> <li><a ng-click="logout()">Logout</a></li> </ul> </div> </div> </div> </div> <div class="container ng-cloak" ng-cloak> <div ng-view=""></div> </div> <div class="footer"> <div class="container"> <p>Meal Planner &reg;</p> </div> </div> <!-- Google Analytics: change UA-XXXXX-X to be your site's ID --> <script>!function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
-       (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
-       r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
-       }(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');</script> <script src="scripts/vendor.af319e3f.js"></script> <script src="scripts/scripts.f244daf2.js"></script>  
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>MealPlanner</title>
+    <base href="“https://okadri.github.io/mealPlanner/”">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+      crossorigin="anonymous"
+    />
+  <link rel="stylesheet" href="styles.958a4500fab77211223d.css"></head>
+  <body>
+    <app-root></app-root>
+  <script type="text/javascript" src="runtime.ec2944dd8b20ec099bf3.js"></script><script type="text/javascript" src="polyfills.fec146f4472ee5fb9cac.js"></script><script type="text/javascript" src="main.c6cad00f7be84df3413d.js"></script></body>
+</html>
