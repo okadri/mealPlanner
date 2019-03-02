@@ -675,6 +675,8 @@ THE SOFTWARE.
 
 @angular/material/select
 
+@angular/material/autocomplete
+
 @angular/material/toolbar
 
 @firebase/util
